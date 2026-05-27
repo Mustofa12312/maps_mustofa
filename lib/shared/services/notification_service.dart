@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart' show Color;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/constants/app_constants.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._();
@@ -9,25 +9,25 @@ class NotificationService {
 
   static const String _keyNotifEnabled = 'prayer_notifications_enabled';
   static const String _keyAlarmEnabled = 'adzan_alarm_enabled';
+  static const Color _primaryColor = Color(0xFF00875A);
 
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
   bool _initialized = false;
 
   Future<void> init() async {
     if (_initialized) return;
-
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
-    const settings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
+    await _plugin.initialize(
+      const InitializationSettings(
+          android: androidSettings, iOS: iosSettings),
     );
-
-    await _plugin.initialize(settings);
     _initialized = true;
   }
 
@@ -52,63 +52,63 @@ class NotificationService {
     await prefs.setBool(_keyAlarmEnabled, value);
   }
 
+  AndroidNotificationDetails _buildAndroidDetails(
+      String channelId, String channelName,
+      {String? desc}) {
+    return AndroidNotificationDetails(
+      channelId,
+      channelName,
+      channelDescription: desc ?? channelName,
+      importance: Importance.high,
+      priority: Priority.high,
+      color: _primaryColor,
+    );
+  }
+
   /// Show immediate prayer reminder notification
   Future<void> showPrayerReminder({
     required String prayerName,
     required String time,
     required bool isSafar,
   }) async {
-    final enabled = await notificationsEnabled;
-    if (!enabled) return;
+    if (!await notificationsEnabled) return;
 
     final body = isSafar
-        ? 'Waktu $prayerName pukul $time — Anda sedang safar, boleh qasar & jamak'
-        : 'Waktu $prayerName pukul $time — Cari masjid terdekat';
-
-    final androidDetails = AndroidNotificationDetails(
-      'prayer_channel',
-      'Waktu Salat',
-      channelDescription: 'Notifikasi pengingat waktu salat',
-      importance: Importance.high,
-      priority: Priority.high,
-      styleInformation: BigTextStyleInformation(body),
-      color: const Color(0xFF00875A),
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+        ? 'Waktu $prayerName pukul $time — Anda musafir, boleh qasar & jamak'
+        : 'Waktu $prayerName pukul $time — Segera cari masjid terdekat';
 
     await _plugin.show(
-      prayerName.hashCode,
+      prayerName.hashCode & 0x7FFFFFFF,
       '🕌 $prayerName',
       body,
-      NotificationDetails(android: androidDetails, iOS: iosDetails),
+      NotificationDetails(
+        android: _buildAndroidDetails(
+            'prayer_channel', 'Waktu Salat',
+            desc: 'Pengingat waktu salat'),
+        iOS: const DarwinNotificationDetails(
+            presentAlert: true, presentSound: true),
+      ),
     );
   }
 
-  /// Show navigation safar alert
+  /// Show safar status alert
   Future<void> showSafarAlert({required String message}) async {
-    const androidDetails = AndroidNotificationDetails(
-      'safar_channel',
-      'Status Safar',
-      channelDescription: 'Notifikasi status safar & perjalanan',
-      importance: Importance.defaultImportance,
-      color: Color(0xFFFFAB00),
-    );
-
     await _plugin.show(
       1001,
       '✈️ Status Safar',
       message,
-      const NotificationDetails(android: androidDetails),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'safar_channel',
+          'Status Safar',
+          importance: Importance.defaultImportance,
+          color: const Color(0xFFFFAB00),
+        ),
+      ),
     );
   }
 
-  /// Schedule prayer notifications for today based on prayer times
+  /// Schedule upcoming prayer notifications for today
   Future<void> schedulePrayerNotifications({
     required String fajr,
     required String dhuhr,
@@ -117,62 +117,60 @@ class NotificationService {
     required String isha,
     required bool isSafar,
   }) async {
-    final enabled = await notificationsEnabled;
-    if (!enabled) return;
-
+    if (!await notificationsEnabled) return;
     await cancelAllPrayerNotifications();
 
     final prayers = [
-      ('Subuh', fajr, 100),
-      ('Dzuhur', dhuhr, 101),
-      ('Ashar', asr, 102),
-      ('Maghrib', maghrib, 103),
-      ('Isya', isha, 104),
+      (100, 'Subuh', fajr),
+      (101, 'Dzuhur', dhuhr),
+      (102, 'Ashar', asr),
+      (103, 'Maghrib', maghrib),
+      (104, 'Isya', isha),
     ];
 
-    for (final (name, time, id) in prayers) {
-      final scheduledTime = _parseTimeToday(time);
-      if (scheduledTime == null) continue;
-      if (scheduledTime.isBefore(DateTime.now())) continue;
+    for (final (id, name, time) in prayers) {
+      final scheduled = _parseTimeToday(time);
+      if (scheduled == null) continue;
+      // Notify at prayer time (not before — simpler for now)
+      if (scheduled.isBefore(DateTime.now())) continue;
 
-      // Notify 10 minutes before
-      final notifyAt = scheduledTime.subtract(const Duration(minutes: 10));
-      if (notifyAt.isAfter(DateTime.now())) {
-        await _scheduleAt(
-          id: id,
-          title: '🕌 $name dalam 10 menit',
-          body: isSafar
-              ? '$name pukul $time. Anda musafir — boleh qasar & jamak'
-              : '$name pukul $time. Segera cari masjid terdekat',
-          scheduledTime: notifyAt,
-        );
-      }
+      final body = isSafar
+          ? '$name pukul $time. Anda musafir — boleh qasar & jamak'
+          : '$name pukul $time. Segera cari masjid terdekat.';
+
+      // Show as immediate notification at prayer time via alarm-like approach
+      // (zonedSchedule needs timezone pkg — using plain show with future check)
+      _scheduleWithDelay(
+        id: id,
+        title: '🕌 Waktu $name',
+        body: body,
+        at: scheduled,
+      );
     }
   }
 
-  Future<void> _scheduleAt({
+  void _scheduleWithDelay({
     required int id,
     required String title,
     required String body,
-    required DateTime scheduledTime,
-  }) async {
-    final androidDetails = AndroidNotificationDetails(
-      'prayer_scheduled',
-      'Jadwal Salat',
-      channelDescription: 'Notifikasi terjadwal waktu salat',
-      importance: Importance.high,
-      priority: Priority.high,
-      color: const Color(0xFF00875A),
-    );
-
-    await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledTime.toLocal().toUtc() as dynamic,
-      NotificationDetails(android: androidDetails),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
+    required DateTime at,
+  }) {
+    final delay = at.difference(DateTime.now());
+    if (delay.isNegative) return;
+    Future.delayed(delay, () async {
+      await _plugin.show(
+        id,
+        title,
+        body,
+        NotificationDetails(
+          android: _buildAndroidDetails(
+              'prayer_scheduled', 'Jadwal Salat',
+              desc: 'Notifikasi terjadwal waktu salat'),
+          iOS: const DarwinNotificationDetails(
+              presentAlert: true, presentSound: true),
+        ),
+      );
+    });
   }
 
   DateTime? _parseTimeToday(String timeStr) {
@@ -180,7 +178,8 @@ class NotificationService {
       final parts = timeStr.split(':');
       if (parts.length < 2) return null;
       final now = DateTime.now();
-      return DateTime(now.year, now.month, now.day,
+      return DateTime(
+          now.year, now.month, now.day,
           int.parse(parts[0]), int.parse(parts[1]));
     } catch (_) {
       return null;
@@ -193,15 +192,5 @@ class NotificationService {
     }
   }
 
-  Future<void> cancelAll() async => await _plugin.cancelAll();
-
-  // Simple color stub needed in pure Dart context
-  // ignore: unused_element
-  static int _colorToArgb(int r, int g, int b) => 0xFF000000 | (r << 16) | (g << 8) | b;
-}
-
-// Simple Color stub for notification color
-class Color {
-  final int value;
-  const Color(this.value);
+  Future<void> cancelAll() async => _plugin.cancelAll();
 }

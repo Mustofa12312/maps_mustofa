@@ -5,6 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
 import 'features/splash/splash_screen.dart';
 import 'shared/services/location_service.dart';
+import 'shared/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,9 @@ void main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
+  // Init notification service
+  await NotificationService().init();
 
   runApp(const SafarMapsApp());
 }
