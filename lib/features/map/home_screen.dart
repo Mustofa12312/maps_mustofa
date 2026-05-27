@@ -189,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     point: LatLng(pos.latitude, pos.longitude),
                     width: 60,
                     height: 60,
-                    child: _UserLocationMarker(heading: locationService.heading),
+                    child:
+                        _UserLocationMarker(heading: locationService.heading),
                   ),
                 ],
               ),
@@ -246,7 +247,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                        MaterialPageRoute(
+                            builder: (_) => const ProfileScreen()),
                       );
                     },
                     child: Container(
@@ -256,7 +258,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         color: AppColors.primary.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.person, color: AppColors.primary, size: 20),
+                      child: const Icon(Icons.person,
+                          color: AppColors.primary, size: 20),
                     ),
                   ),
                 ],
@@ -297,7 +300,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.access_time, color: AppColors.primary, size: 14),
+                const Icon(Icons.access_time,
+                    color: AppColors.primary, size: 14),
                 const SizedBox(width: 4),
                 Text(
                   next != null ? next[1] : 'Selesai',
@@ -469,7 +473,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       children: [
         _buildFab(
           icon: _isFollowing ? Icons.gps_fixed : Icons.gps_not_fixed,
-          color: _isFollowing ? AppColors.primary : AppColors.textOnDarkSecondary,
+          color:
+              _isFollowing ? AppColors.primary : AppColors.textOnDarkSecondary,
           onTap: _recenterMap,
         ),
       ],
