@@ -431,9 +431,9 @@ class _NavigationScreenState extends State<NavigationScreen>
     if (_loading) {
       return Container(
         height: 180,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surfaceDark,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: const Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -448,9 +448,9 @@ class _NavigationScreenState extends State<NavigationScreen>
     if (_error.isNotEmpty) {
       return Container(
         height: 180,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surfaceDark,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -470,9 +470,9 @@ class _NavigationScreenState extends State<NavigationScreen>
     if (_route == null) return const SizedBox();
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surfaceDark,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         border: Border(top: BorderSide(color: AppColors.borderDark)),
       ),
       child: Padding(
@@ -505,7 +505,7 @@ class _NavigationScreenState extends State<NavigationScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Progress Perjalanan', style: TextStyle(color: AppColors.textOnDarkSecondary, fontSize: 11)),
+                        const Text('Progress Perjalanan', style: TextStyle(color: AppColors.textOnDarkSecondary, fontSize: 11)),
                         Text('${(p * 100).toStringAsFixed(0)}%', style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                       ],
                     ),

@@ -16,26 +16,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final List<_OnboardingData> _pages = [
-    _OnboardingData(
+    const _OnboardingData(
       emoji: '🗺️',
       title: 'Navigasi Real-Time',
       subtitle:
           'Rute tercepat, turn-by-turn navigation, dan voice guidance dalam Bahasa Indonesia',
-      color: const Color(0xFF00875A),
+      color: Color(0xFF00875A),
     ),
-    _OnboardingData(
+    const _OnboardingData(
       emoji: '🕌',
       title: 'Jadwal Salat Otomatis',
       subtitle:
           'Waktu salat akurat berdasarkan lokasi GPS, dengan pengingat adzan dan masjid terdekat',
-      color: const Color(0xFF0052CC),
+      color: Color(0xFF0052CC),
     ),
-    _OnboardingData(
+    const _OnboardingData(
       emoji: '✈️',
       title: 'Status Safar & Qasar',
       subtitle:
           'Hitung otomatis status musafir, qasar, dan jamak sesuai mazhab pilihan Anda',
-      color: const Color(0xFFFF8B00),
+      color: Color(0xFFFF8B00),
     ),
   ];
 
@@ -77,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.topRight,
               child: TextButton(
                 onPressed: _finish,
-                child: Text(
+                child: const Text(
                   'Lewati',
                   style: TextStyle(
                     color: AppColors.textOnDarkSecondary,

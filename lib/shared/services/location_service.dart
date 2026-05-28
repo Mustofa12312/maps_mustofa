@@ -81,7 +81,7 @@ class LocationService extends ChangeNotifier {
     final locationSettings = AndroidSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: AppConstants.locationDistanceFilterM.round(),
-      intervalDuration: Duration(
+      intervalDuration: const Duration(
         milliseconds: AppConstants.locationUpdateIntervalMs,
       ),
     );

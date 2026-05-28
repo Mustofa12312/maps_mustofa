@@ -49,10 +49,12 @@ class _SafarScreenState extends State<SafarScreen> {
     pos ??= await locationService.getCurrentPosition();
     if (pos != null) {
       final pt = await PrayerService.getPrayerTimes(lat: pos.latitude, lng: pos.longitude);
-      if (mounted) setState(() {
-        _prayerTime = pt;
-        _loadingPrayer = false;
-      });
+      if (mounted) {
+        setState(() {
+          _prayerTime = pt;
+          _loadingPrayer = false;
+        });
+      }
     } else {
       setState(() => _loadingPrayer = false);
     }
@@ -99,13 +101,13 @@ class _SafarScreenState extends State<SafarScreen> {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('✈️  Apa itu Safar?',
+                  Text('✈️  Apa itu Safar?',
                     style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 10),
-                  const Text(
+                  SizedBox(height: 10),
+                  Text(
                     'Safar (perjalanan) dalam fiqih Islam memiliki jarak minimum tertentu. '
                     'Jika memenuhi syarat, Anda boleh men-qasar (memendekkan) sholat 4 rakaat menjadi 2 '
                     'dan men-jamak (menggabungkan) dua waktu sholat.',

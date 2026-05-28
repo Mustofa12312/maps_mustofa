@@ -325,9 +325,9 @@ class _RoutePreviewScreenState extends State<RoutePreviewScreen> {
 
   Widget _buildBottomPanel() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surfaceDark,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         border: Border(top: BorderSide(color: AppColors.borderDark)),
       ),
       child: SingleChildScrollView(

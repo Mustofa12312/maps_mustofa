@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surfaceDark,
         border: Border(bottom: BorderSide(color: AppColors.borderDark)),
       ),

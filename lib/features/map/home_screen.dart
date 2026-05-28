@@ -370,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         color: AppColors.surfaceDark,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border(top: BorderSide(color: AppColors.borderDark)),
+        border: const Border(top: BorderSide(color: AppColors.borderDark)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.4),

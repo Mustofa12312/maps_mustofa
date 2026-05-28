@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/services/location_service.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});

@@ -132,7 +132,7 @@ class _MosqueScreenState extends State<MosqueScreen>
             name: m.name,
             latitude: m.latitude,
             longitude: m.longitude,
-            address: '${pct}% dari rute (±${dist.toStringAsFixed(1)} km)',
+            address: '$pct% dari rute (±${dist.toStringAsFixed(1)} km)',
             hasWudu: m.hasWudu,
           ));
         }
@@ -256,7 +256,7 @@ class _MosqueScreenState extends State<MosqueScreen>
     final pos = context.read<LocationService>().currentPosition;
     final center = pos != null
         ? LatLng(pos.latitude, pos.longitude)
-        : LatLng(AppConstants.defaultLat, AppConstants.defaultLng);
+        : const LatLng(AppConstants.defaultLat, AppConstants.defaultLng);
 
     return FlutterMap(
       options: MapOptions(initialCenter: center, initialZoom: 11),
@@ -436,7 +436,7 @@ class _MosqueScreenState extends State<MosqueScreen>
     final pos = context.read<LocationService>().currentPosition;
     final center = pos != null
         ? LatLng(pos.latitude, pos.longitude)
-        : LatLng(AppConstants.defaultLat, AppConstants.defaultLng);
+        : const LatLng(AppConstants.defaultLat, AppConstants.defaultLng);
 
     return FlutterMap(
       options: MapOptions(initialCenter: center, initialZoom: 14),
