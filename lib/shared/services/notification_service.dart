@@ -25,7 +25,7 @@ class NotificationService {
       requestSoundPermission: true,
     );
     await _plugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
           android: androidSettings, iOS: iosSettings),
     );
     _initialized = true;
@@ -78,10 +78,10 @@ class NotificationService {
         : 'Waktu $prayerName pukul $time — Segera cari masjid terdekat';
 
     await _plugin.show(
-      prayerName.hashCode & 0x7FFFFFFF,
-      '🕌 $prayerName',
-      body,
-      NotificationDetails(
+      id: prayerName.hashCode & 0x7FFFFFFF,
+      title: '🕌 $prayerName',
+      body: body,
+      notificationDetails: NotificationDetails(
         android: _buildAndroidDetails(
             'prayer_channel', 'Waktu Salat',
             desc: 'Pengingat waktu salat'),
@@ -94,15 +94,15 @@ class NotificationService {
   /// Show safar status alert
   Future<void> showSafarAlert({required String message}) async {
     await _plugin.show(
-      1001,
-      '✈️ Status Safar',
-      message,
-      NotificationDetails(
+      id: 1001,
+      title: '✈️ Status Safar',
+      body: message,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'safar_channel',
           'Status Safar',
           importance: Importance.defaultImportance,
-          color: const Color(0xFFFFAB00),
+          color: Color(0xFFFFAB00),
         ),
       ),
     );
@@ -159,10 +159,10 @@ class NotificationService {
     if (delay.isNegative) return;
     Future.delayed(delay, () async {
       await _plugin.show(
-        id,
-        title,
-        body,
-        NotificationDetails(
+        id: id,
+        title: title,
+        body: body,
+        notificationDetails: NotificationDetails(
           android: _buildAndroidDetails(
               'prayer_scheduled', 'Jadwal Salat',
               desc: 'Notifikasi terjadwal waktu salat'),
@@ -188,7 +188,7 @@ class NotificationService {
 
   Future<void> cancelAllPrayerNotifications() async {
     for (final id in [100, 101, 102, 103, 104]) {
-      await _plugin.cancel(id);
+      await _plugin.cancel(id: id);
     }
   }
 
