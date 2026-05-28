@@ -18,7 +18,10 @@ class RoutingService {
         '?overview=full&geometries=geojson&steps=true',
       );
 
-      final response = await http.get(url).timeout(const Duration(seconds: 15));
+      final response = await http.get(
+        url,
+        headers: {'User-Agent': 'SafarMaps/1.0'},
+      ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
