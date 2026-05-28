@@ -159,9 +159,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: 160,
             height: 160,
             decoration: BoxDecoration(
-              color: data.color.withOpacity(0.12),
+              color: data.color.withValues(alpha: 0.12),
               shape: BoxShape.circle,
-              border: Border.all(color: data.color.withOpacity(0.3), width: 2),
+              border: Border.all(color: data.color.withValues(alpha: 0.3), width: 2),
             ),
             child: Center(
               child: Text(data.emoji, style: const TextStyle(fontSize: 72)),

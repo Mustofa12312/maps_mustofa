@@ -83,7 +83,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
               final newVal = !_notificationsEnabled;
               await _notif.setNotificationsEnabled(newVal);
               setState(() => _notificationsEnabled = newVal);
-              if (mounted) {
+              if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(newVal
@@ -289,12 +289,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
                         time: nextPrayer[2],
                         isSafar: false,
                       );
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('🔔 Test notifikasi dikirim!')),
-                        );
-                      }
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('🔔 Test notifikasi dikirim!')),
+                      );
                     }
                   },
                   child: Container(

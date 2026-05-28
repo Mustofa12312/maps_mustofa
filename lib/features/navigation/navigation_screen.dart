@@ -32,7 +32,6 @@ class _NavigationScreenState extends State<NavigationScreen>
   String _error = '';
   final VoiceNavigationService _voice = VoiceNavigationService();
   bool _voiceEnabled = true;
-  double _progressPercent = 0.0;
   DateTime? _startTime;
 
   @override
@@ -86,7 +85,7 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   void _startNavigation() {
-    setState(() { _navigationActive = true; _startTime = DateTime.now(); _progressPercent = 0; });
+    setState(() { _navigationActive = true; _startTime = DateTime.now(); });
     if (_route != null && _route!.steps.isNotEmpty) {
       _voice.speak('Navigasi dimulai. ${_route!.steps[0].instruction}');
     }
